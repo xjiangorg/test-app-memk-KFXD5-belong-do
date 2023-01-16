@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app.kubernetes.io/created-by: application-service
+    app.kubernetes.io/instance: test-component-tapy
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/name: test-component-tapy
+    app.kubernetes.io/part-of: test-app-memk
+  name: test-component-tapy
+  namespace: build-e2e-hacbs-ziht
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: test-component-tapy
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/instance: test-component-tapy
+    spec:
+      containers:
+      - image: quay.io/redhat-appstudio-qe/test-images:ff2fdbc460294324ae11840ce8102402
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8081
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        name: container-image
+        ports:
+        - containerPort: 8081
+        readinessProbe:
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          tcpSocket:
+            port: 8081
+        resources: {}
+status: {}
